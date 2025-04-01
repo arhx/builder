@@ -1,0 +1,7 @@
+@import "tom-select/dist/css/tom-select.css";
+
+.builder-form .form-control,
+.builder-form .form-control,
+.builder-form .form-control{
+    @apply w-full;
+}

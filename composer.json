@@ -1,0 +1,21 @@
+{
+  "name": "arhx/builder",
+  "version": "1.0.0",
+  "description": "Package for build table modules",
+  "autoload": {
+    "psr-4": {
+      "Arhx\\Builder\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.3",
+    "laravel/framework": "^11.31"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Arhx\\Builder\\BuilderServiceProvider"
+      ]
+    }
+  }
+}
