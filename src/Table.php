@@ -161,7 +161,7 @@ class Table extends Builder
     {
         if(!isset($this->pagination)){
             $this->applyFilters();
-            $this->pagination = $this->query->simplePaginate($this->config['per_page'] ?? 100);
+            $this->pagination = $this->query->simplePaginate($this->config['per_page'] ?? 100)->withQueryString();
             $lazySource = [];
             foreach($this->getFields() as $field){
                 if($source = $field->getLazySource()){

@@ -34,15 +34,39 @@ document.addEventListener("DOMContentLoaded", function() {
     initAutocomplete();
     document.addEventListener("change", function(event) {
         const form = event.target.form;
-        if(form && form.classList.contains('auto-submit')){
+        if (form && form.classList.contains('auto-submit')) {
             [...form.querySelectorAll('input,select,textarea')].forEach((element) => {
-                if(!element.value){
+                if (!element.value) {
                     element.disabled = true;
                 }
-            })
-            form.submit();
+            });
+
+            const ajaxSelector = form.dataset.ajax;
+            if (ajaxSelector) {
+                event.preventDefault();
+                const formAction = form.getAttribute('action') || window.location.href;
+                const url = new URL(formAction, window.location.origin);
+                const params = new URLSearchParams(new FormData(form));
+                url.search = params.toString();
+
+                axios.get(url.toString())
+                    .then(response => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(response.data, 'text/html');
+                        const newElement = doc.querySelector(ajaxSelector);
+                        const currentElement = document.querySelector(ajaxSelector);
+                        if (currentElement && newElement) {
+                            currentElement.replaceWith(newElement);
+                            form.dispatchEvent(new Event('ajax-updated', { bubbles: true }));
+                        }
+                    })
+                    .catch(error => console.error('Ошибка при отправке запроса:', error));
+            } else {
+                form.submit();
+            }
         }
     });
+
     document.querySelectorAll(".auto-submit").forEach(form => {
         form.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {

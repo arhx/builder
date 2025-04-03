@@ -17,6 +17,7 @@ class Boolean extends Text
         if(!isset($this->extra['options'])){
             $this->extra['options'] = [
                 '' => 'Все',
+                'null' => __('empty'),
                 'true' => __('true'),
                 'false' => __('false'),
             ];
@@ -25,7 +26,8 @@ class Boolean extends Text
 
     public function toString(): string
     {
-        return $this->value > 0 ? __('true') : __('false');
+        return is_null($this->value) ? '' :
+            ($this->value > 0 ? __('true') : __('false'));
     }
     public function migration(Blueprint $blueprint)
     {
@@ -38,10 +40,9 @@ class Boolean extends Text
             if($value === 'true'){
                 $query->where($name,'>',0);
             }elseif($value === 'false'){
-                $query->where(function($query) use ($name){
-                    $query->whereNull($name)
-                        ->orWhere($name,'=',0);
-                });
+                $query->where($name,'=',0);
+            }elseif($value === 'empty'){
+                $query->whereNull($name);
             }
         }
     }
