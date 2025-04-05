@@ -131,7 +131,7 @@ class Table extends Builder
 
     public function schemaCreate()
     {
-        Schema::create($this->name, function (Blueprint $table) {
+        Schema::create($this->table, function (Blueprint $table) {
             $table->id();
             foreach ($this->getFields() as $field) {
                 $field->migration($table);

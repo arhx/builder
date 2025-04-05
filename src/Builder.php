@@ -8,18 +8,23 @@ use Arhx\Builder\Types\Text;
 
 class Builder{
     protected string $name;
+    protected string $table;
     protected array $fields = [];
     protected array $config;
     protected QueryBuilder $query;
 
-    public function __construct(string $tableName)
+    public function __construct(string $module, string $tableName = null)
     {
-        $config = config("builder.tables.{$tableName}", false);
+        if(empty($tableName)){
+            $tableName = $module;
+        }
+        $config = config("builder.tables.{$module}", false);
         if ($config === false) {
-            abort(404, "Table {$tableName} not found");
+            abort(404, "Module {$module} not found");
         }
         $this->config = $config;
-        $this->name = $tableName;
+        $this->name = $module;
+        $this->table = $tableName;
 
         $query = DB::table($tableName);
         $this->setQuery($query);
